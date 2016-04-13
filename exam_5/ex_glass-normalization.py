@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 from sklearn import datasets
 from sklearn.tree import DecisionTreeClassifier
@@ -31,6 +32,19 @@ def getTargetData(fielname):
 
 train_text,train_lable = getTargetData("glass.data")
 test_text,test_lable = getTargetData("glass.test")
+
+df = pd.DataFrame(train_text)
+for i in range(1,len(train_text[0])-1):
+	df[i] = df[i]/df[i].max()
+
+train_text = df.values
+
+df = pd.DataFrame(test_text)
+for i in range(1,len(test_text[0])-1):
+	df[i] = df[i]/df[i].max()
+
+test_text = df.values
+
 clf1 = DecisionTreeClassifier(max_depth=4)
 clf2 = KNeighborsClassifier(n_neighbors=7)
 clf3 = SVC(kernel='rbf', probability=True)
