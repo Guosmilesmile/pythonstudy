@@ -30,8 +30,8 @@ def getTargetData(fielname):
 train_text,train_classfi = getTargetData("Breast_train.data")
 test_text,test_classfi = getTargetData("Breast_test.data")
 
-clf = DecisionTreeClassifier(max_depth=4)
-#clf = SVC(kernel='rbf', probability=True)
+#clf = DecisionTreeClassifier(max_depth=4)
+clf = SVC(kernel='rbf', probability=True)
 clf.fit(train_text, train_classfi)
 result = clf.predict(test_text)
 

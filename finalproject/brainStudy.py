@@ -12,6 +12,24 @@ from scipy import diag, arange, meshgrid, where
 from numpy.random import multivariate_normal
 from random import normalvariate
 import pandas as pd
+import numpy as np
+
+def getTargetData(fielname):
+    file_object  = open("Breast_train.data");
+    all_text_lines = file_object.readlines()
+    all_text = []
+    train_text = []
+    train_classfi = []
+    for line in all_text_lines:
+        all_text.append(line.strip().split(","))
+    train_classfi  = all_text[0]
+    for i in range(len(all_text)):
+        if(i!=0):
+            train_text.append(all_text[i])
+    train_text = np.array(train_text)
+    train_classfi = np.array(train_classfi)
+    return train_text.transpose(),train_classfi
+
 
 # convert a supervised dataset to a classification dataset
 def _convert_supervised_to_classification(supervised_dataset,classes):
@@ -23,9 +41,9 @@ def _convert_supervised_to_classification(supervised_dataset,classes):
     return classification_dataset
 
 
-def generate_data():
-    INPUT_FEATURES = 3 
-    CLASSES = 3
+def generate_data1():
+    INPUT_FEATURES = 9216 
+    CLASSES = 5
     file_object = open("iris.data.txt")
     lines = file_object.readlines()
     lines.pop()
@@ -49,32 +67,66 @@ def generate_data():
     return {'minX': 0, 'maxX': 1,
             'minY': 0, 'maxY': 1, 'd': alldata}
 
+def generate_data():
+    INPUT_FEATURES = 9216 
+    CLASSES = 5
+
+    train_text,train_classfi = getTargetData("Breast_train.data")
+
+    alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
+    for i in range(len(train_text)):
+        features = train_text[i]
+        klass = train_classfi[i]
+        alldata.addSample(features, klass)
+    return {'minX': 0, 'maxX': 1,
+            'minY': 0, 'maxY': 1, 'd': alldata}
+
+def generate_Testdata():
+    INPUT_FEATURES = 9216 
+    CLASSES = 5
+
+    train_text,train_classfi = getTargetData("Breast_test.data")
+
+    alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
+    for i in range(len(train_text)):
+        features = train_text[i]
+        klass = train_classfi[i]
+        alldata.addSample(features, klass)
+    return {'minX': 0, 'maxX': 1,
+            'minY': 0, 'maxY': 1, 'd': alldata}
 
 
-def perceptron(hidden_neurons=5, weightdecay=0.01, momentum=0.1):
-    INPUT_FEATURES = 3
-    CLASSES = 3
+def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
+    INPUT_FEATURES = 9216
+    CLASSES = 5
     HIDDEN_NEURONS = hidden_neurons
     WEIGHTDECAY = weightdecay
     MOMENTUM = momentum
+    
     g = generate_data()
     alldata = g['d']
-    print alldata
-    tstdata, trndata = alldata.splitWithProportion(0.25)
-    trndata = _convert_supervised_to_classification(trndata,CLASSES)
-    tstdata = _convert_supervised_to_classification(tstdata,CLASSES)
+    testdata = generate_Testdata()['d']
+    #tstdata, trndata = alldata.splitWithProportion(0.25)
+    #print type(tstdata)
+
+    trndata = _convert_supervised_to_classification(alldata,CLASSES)
+    tstdata = _convert_supervised_to_classification(testdata,CLASSES)
     trndata._convertToOneOfMany()  
     tstdata._convertToOneOfMany()
     fnn = buildNetwork(trndata.indim, HIDDEN_NEURONS, trndata.outdim,outclass=SoftmaxLayer)
     trainer = BackpropTrainer(fnn, dataset=trndata, momentum=MOMENTUM,verbose=True, weightdecay=WEIGHTDECAY)
     result = 0;
-    for i in range(50):
+    ssss = 0;
+    for i in range(100):
         trainer.trainEpochs(1)
         trnresult = percentError(trainer.testOnClassData(),trndata['class'])
         tstresult = percentError(trainer.testOnClassData(dataset=tstdata), tstdata['class'])
         out = fnn.activateOnDataset(tstdata)
+        ssss = out
         out = out.argmax(axis=1)
         result = out
+    df = pd.DataFrame(ssss)
+    df.to_excel("seeout.xls")
     df = pd.DataFrame(result)
     df.insert(1,'1',tstdata['class'])
     df.to_excel("see.xls")
@@ -86,7 +138,7 @@ if __name__ == '__main__':
 
     # Add more options if you like
     parser.add_argument("-H", metavar="H", type=int, dest="hidden_neurons",
-                        default=5,
+                        default=20,
                         help="number of neurons in the hidden layer")
     parser.add_argument("-d", metavar="W", type=float, dest="weightdecay",
                         default=0.01,
