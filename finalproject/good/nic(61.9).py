@@ -86,7 +86,7 @@ def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
     trndata._convertToOneOfMany()  
     tstdata._convertToOneOfMany()
     fnn = buildNetwork(trndata.indim, HIDDEN_NEURONS, trndata.outdim,outclass=SoftmaxLayer)
-    trainer = BackpropTrainer(fnn, dataset=trndata, momentum=MOMENTUM,verbose=True, weightdecay=WEIGHTDECAY,learningrate=0.01)
+    trainer = BackpropTrainer(fnn, dataset=trndata, momentum=MOMENTUM,verbose=True, weightdecay=WEIGHTDECAY,learningrate=0.008)
     result = 0;
     ssss = 0;
     for i in range(200):
@@ -114,7 +114,7 @@ if __name__ == '__main__':
 
     # Add more options if you like
     parser.add_argument("-H", metavar="H", type=int, dest="hidden_neurons",
-                        default=300,
+                        default=200,
                         help="number of neurons in the hidden layer")
     parser.add_argument("-d", metavar="W", type=float, dest="weightdecay",
                         default=0.03,
