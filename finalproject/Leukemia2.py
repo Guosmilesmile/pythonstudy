@@ -159,7 +159,7 @@ if __name__ == '__main__':
                         default=40,
                         help="number of neurons in the hidden layer")
     parser.add_argument("-d", metavar="W", type=float, dest="weightdecay",
-                        default=0.01,
+                        default=0.03,
                         help="weightdecay")
     parser.add_argument("-m", metavar="M", type=float, dest="momentum",
                         default=0.1,

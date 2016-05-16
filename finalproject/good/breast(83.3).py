@@ -28,6 +28,9 @@ def getTargetData(fielname):
             train_text.append(all_text[i])
     train_text = np.array(train_text)
     train_classfi = np.array(train_classfi)
+    for i in range(len(train_text)):
+        for j in range(len(train_text[0])):
+            train_text[i][j] = float(train_text[i][j])
     return train_text.transpose(),train_classfi
 
 
@@ -68,51 +71,63 @@ def _convert_supervised_to_classification(supervised_dataset,classes):
 #             'minY': 0, 'maxY': 1, 'd': alldata}
 
 def generate_data():
-    INPUT_FEATURES = 7129 
-    CLASSES = 3
+    INPUT_FEATURES = 9216 
+    CLASSES = 5
 
-    train_text,train_classfi = getTargetData("Lung1_train.data")
+    train_text,train_classfi = getTargetData("Breast_train.data")
 
     alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
     for i in range(len(train_text)):
         features = train_text[i]
-        if train_classfi[i]=="A" :
+        if train_classfi[i]=="lumina" :
             klass = 0
             alldata.addSample(features, klass)
-        elif train_classfi[i]=="C" :
+        elif train_classfi[i]=="ERBB2" :
             klass = 1
             alldata.addSample(features, klass)
-        elif train_classfi[i]=="N" :
+        elif train_classfi[i]=="basal" :
             klass = 2
+            alldata.addSample(features, klass)
+        elif train_classfi[i]=="normal" :
+            klass = 3
+            alldata.addSample(features, klass)
+        elif train_classfi[i]=="cell_lines" :
+            klass = 4
             alldata.addSample(features, klass)
     return {'minX': 0, 'maxX': 1,
             'minY': 0, 'maxY': 1, 'd': alldata}
 
 def generate_Testdata():
-    INPUT_FEATURES = 7129 
-    CLASSES = 3
+    INPUT_FEATURES = 9216 
+    CLASSES = 5
 
-    train_text,train_classfi = getTargetData("Lung1_test.data")
+    train_text,train_classfi = getTargetData("Breast_test.data")
 
     alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
     for i in range(len(train_text)):
         features = train_text[i]
-        if train_classfi[i]=="A" :
+        if train_classfi[i]=="lumina" :
             klass = 0
             alldata.addSample(features, klass)
-        elif train_classfi[i]=="C" :
+        elif train_classfi[i]=="ERBB2" :
             klass = 1
             alldata.addSample(features, klass)
-        elif train_classfi[i]=="N" :
+        elif train_classfi[i]=="basal" :
             klass = 2
+            alldata.addSample(features, klass)
+        elif train_classfi[i]=="normal" :
+            klass = 3
+            alldata.addSample(features, klass)
+        elif train_classfi[i]=="cell_lines" :
+            klass = 4
             alldata.addSample(features, klass)
     return {'minX': 0, 'maxX': 1,
             'minY': 0, 'maxY': 1, 'd': alldata}
 
 
 def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
-    INPUT_FEATURES = 12582
-    CLASSES = 3
+    INPUT_FEATURES = 9216
+    CLASSES = 5
     HIDDEN_NEURONS = hidden_neurons
     WEIGHTDECAY = weightdecay
     MOMENTUM = momentum
@@ -131,7 +146,7 @@ def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
     trainer = BackpropTrainer(fnn, dataset=trndata, momentum=MOMENTUM,verbose=True, weightdecay=WEIGHTDECAY,learningrate=0.01)
     result = 0;
     ssss = 0;
-    for i in range(200):
+    for i in range(100):
         trainer.trainEpochs(1)
         trnresult = percentError(trainer.testOnClassData(),trndata['class'])
         tstresult = percentError(trainer.testOnClassData(dataset=tstdata), tstdata['class'])
@@ -140,10 +155,10 @@ def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
         out = out.argmax(axis=1)
         result = out
     df = pd.DataFrame(ssss)
-    df.to_excel("Lung1out.xls")
+    df.to_excel("breastout.xls")
     df = pd.DataFrame(result)
     df.insert(1,'1',tstdata['class'])
-    df.to_excel("Lung1.xls")
+    df.to_excel("breast.xls")
     error = 0;
     for i in range(len(tstdata['class'])):
         if tstdata['class'][i] != result[i]:
@@ -156,10 +171,10 @@ if __name__ == '__main__':
 
     # Add more options if you like
     parser.add_argument("-H", metavar="H", type=int, dest="hidden_neurons",
-                        default=70,
+                        default=10,
                         help="number of neurons in the hidden layer")
     parser.add_argument("-d", metavar="W", type=float, dest="weightdecay",
-                        default=0.03,
+                        default=0.1,
                         help="weightdecay")
     parser.add_argument("-m", metavar="M", type=float, dest="momentum",
                         default=0.1,

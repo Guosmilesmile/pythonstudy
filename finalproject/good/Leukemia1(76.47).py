@@ -71,18 +71,18 @@ def generate_data():
     INPUT_FEATURES = 7129 
     CLASSES = 3
 
-    train_text,train_classfi = getTargetData("Lung1_train.data")
+    train_text,train_classfi = getTargetData("Leukemia1_train.data")
 
     alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
     for i in range(len(train_text)):
         features = train_text[i]
-        if train_classfi[i]=="A" :
+        if train_classfi[i]=="B_cell" :
             klass = 0
             alldata.addSample(features, klass)
-        elif train_classfi[i]=="C" :
+        elif train_classfi[i]=="AML" :
             klass = 1
             alldata.addSample(features, klass)
-        elif train_classfi[i]=="N" :
+        elif train_classfi[i]=="T_cell" :
             klass = 2
             alldata.addSample(features, klass)
     return {'minX': 0, 'maxX': 1,
@@ -92,18 +92,18 @@ def generate_Testdata():
     INPUT_FEATURES = 7129 
     CLASSES = 3
 
-    train_text,train_classfi = getTargetData("Lung1_test.data")
+    train_text,train_classfi = getTargetData("Leukemia1_test.data")
 
     alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
     for i in range(len(train_text)):
         features = train_text[i]
-        if train_classfi[i]=="A" :
+        if train_classfi[i]=="B_cell" :
             klass = 0
             alldata.addSample(features, klass)
-        elif train_classfi[i]=="C" :
+        elif train_classfi[i]=="AML" :
             klass = 1
             alldata.addSample(features, klass)
-        elif train_classfi[i]=="N" :
+        elif train_classfi[i]=="T_cell" :
             klass = 2
             alldata.addSample(features, klass)
     return {'minX': 0, 'maxX': 1,
@@ -111,7 +111,7 @@ def generate_Testdata():
 
 
 def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
-    INPUT_FEATURES = 12582
+    INPUT_FEATURES = 7129
     CLASSES = 3
     HIDDEN_NEURONS = hidden_neurons
     WEIGHTDECAY = weightdecay
@@ -140,10 +140,10 @@ def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
         out = out.argmax(axis=1)
         result = out
     df = pd.DataFrame(ssss)
-    df.to_excel("Lung1out.xls")
+    df.to_excel("Leukemia1out.xls")
     df = pd.DataFrame(result)
     df.insert(1,'1',tstdata['class'])
-    df.to_excel("Lung1.xls")
+    df.to_excel("Leukemia1.xls")
     error = 0;
     for i in range(len(tstdata['class'])):
         if tstdata['class'][i] != result[i]:
@@ -156,7 +156,7 @@ if __name__ == '__main__':
 
     # Add more options if you like
     parser.add_argument("-H", metavar="H", type=int, dest="hidden_neurons",
-                        default=70,
+                        default=64,
                         help="number of neurons in the hidden layer")
     parser.add_argument("-d", metavar="W", type=float, dest="weightdecay",
                         default=0.03,

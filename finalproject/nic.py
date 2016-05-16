@@ -41,10 +41,10 @@ def _convert_supervised_to_classification(supervised_dataset,classes):
     return classification_dataset
 
 def generate_data():
-    INPUT_FEATURES = 6114 
+    INPUT_FEATURES = 1000 
     CLASSES = 10
 
-    train_text,train_classfi = getTargetData("nci60_train_m.txt")
+    train_text,train_classfi = getTargetData("nci60_train_m_truncated.txt")
     alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
     for i in range(len(train_text)):
         features = train_text[i]
@@ -54,10 +54,10 @@ def generate_data():
             'minY': 0, 'maxY': 1, 'd': alldata}
 
 def generate_Testdata():
-    INPUT_FEATURES = 6114 
+    INPUT_FEATURES = 1000 
     CLASSES = 10
 
-    train_text,train_classfi = getTargetData("nci60_test_m.txt")
+    train_text,train_classfi = getTargetData("nci60_test_m_truncated.txt")
 
     alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
     for i in range(len(train_text)):
@@ -114,10 +114,10 @@ if __name__ == '__main__':
 
     # Add more options if you like
     parser.add_argument("-H", metavar="H", type=int, dest="hidden_neurons",
-                        default=300,
+                        default=400,
                         help="number of neurons in the hidden layer")
     parser.add_argument("-d", metavar="W", type=float, dest="weightdecay",
-                        default=0.03,
+                        default=0.04,
                         help="weightdecay")
     parser.add_argument("-m", metavar="M", type=float, dest="momentum",
                         default=0.1,

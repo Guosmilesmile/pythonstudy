@@ -156,7 +156,7 @@ if __name__ == '__main__':
 
     # Add more options if you like
     parser.add_argument("-H", metavar="H", type=int, dest="hidden_neurons",
-                        default=70,
+                        default=60,
                         help="number of neurons in the hidden layer")
     parser.add_argument("-d", metavar="W", type=float, dest="weightdecay",
                         default=0.03,

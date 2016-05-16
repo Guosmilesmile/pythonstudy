@@ -131,7 +131,7 @@ def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
     trainer = BackpropTrainer(fnn, dataset=trndata, momentum=MOMENTUM,verbose=True, weightdecay=WEIGHTDECAY,learningrate=0.01)
     result = 0;
     ssss = 0;
-    for i in range(200):
+    for i in range(100):
         trainer.trainEpochs(1)
         trnresult = percentError(trainer.testOnClassData(),trndata['class'])
         tstresult = percentError(trainer.testOnClassData(dataset=tstdata), tstdata['class'])
@@ -156,10 +156,10 @@ if __name__ == '__main__':
 
     # Add more options if you like
     parser.add_argument("-H", metavar="H", type=int, dest="hidden_neurons",
-                        default=64,
+                        default=40,
                         help="number of neurons in the hidden layer")
     parser.add_argument("-d", metavar="W", type=float, dest="weightdecay",
-                        default=0.01,
+                        default=0.03,
                         help="weightdecay")
     parser.add_argument("-m", metavar="M", type=float, dest="momentum",
                         default=0.1,
