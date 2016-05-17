@@ -52,8 +52,9 @@ train_text,train_classfi_number,train_classfi,train_feature_name = getTargetData
 X = train_text
 Y = train_classfi_number
 names = train_feature_name
-boston = load_boston()
-X = boston["data"]
-Y = boston["target"]
-names = boston["feature_names"]
-print Y
+rf = RandomForestRegressor()
+rf.fit(X, Y)
+print "Features sorted by their score:"
+print sorted(zip(map(lambda x: round(x, 4), rf.feature_importances_), names), 
+             reverse=True)
+	
