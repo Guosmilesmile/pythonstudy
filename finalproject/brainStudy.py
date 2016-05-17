@@ -13,6 +13,27 @@ from numpy.random import multivariate_normal
 from random import normalvariate
 import pandas as pd
 import numpy as np
+def AAC(listtest,listanswer):
+    labels = list(set(listtest))
+    total = 0
+    for i in range(len(labels)):
+        tp = 0
+        tn = 0
+        fp = 0
+        fn = 0
+        for j in range(len(listanswer)):
+            if(labels[i]==listanswer[j]):
+                if(listanswer[j]==listtest[j]):
+                    tp = tp + 1
+                else:
+                    fp = fp + 1
+            else:
+                if(labels[i]==listtest[j]):
+                    fn = tn + 1
+                else:
+                    tn = fn + 1
+        total = total + float(tp+tn)/(tp+tn+fp+fn)*100
+    return total/len(labels)
 
 def getTargetData(fielname):
     file_object  = open(fielname);
@@ -164,6 +185,7 @@ def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
         if tstdata['class'][i] != result[i]:
             error = error+1
     print (len(tstdata['class'])-error)*1.0/len(tstdata['class'])*100
+    print AAC(result,tstdata['class'])
 if __name__ == '__main__':
     from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
@@ -171,7 +193,7 @@ if __name__ == '__main__':
 
     # Add more options if you like
     parser.add_argument("-H", metavar="H", type=int, dest="hidden_neurons",
-                        default=20,
+                        default=10,
                         help="number of neurons in the hidden layer")
     parser.add_argument("-d", metavar="W", type=float, dest="weightdecay",
                         default=0.1,
