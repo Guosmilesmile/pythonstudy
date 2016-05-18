@@ -1,5 +1,12 @@
+from sklearn.cross_validation import cross_val_score, ShuffleSplit
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import Lasso
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
+from sklearn.feature_selection import RFE
+from sklearn.datasets import load_boston
 # -*- coding: utf-8 -*-
-
+from pybrain.tools.customxml.networkwriter import NetworkWriter
 from pybrain.datasets import ClassificationDataSet
 from pybrain.utilities import percentError
 from pybrain.tools.shortcuts import buildNetwork
@@ -13,7 +20,6 @@ from numpy.random import multivariate_normal
 from random import normalvariate
 import pandas as pd
 import numpy as np
-
 def getTargetData(fielname):
     file_object  = open(fielname);
     all_text_lines = file_object.readlines()
@@ -31,7 +37,53 @@ def getTargetData(fielname):
     for i in range(len(train_text)):
         for j in range(len(train_text[0])):
             train_text[i][j] = float(train_text[i][j])
-    return train_text.transpose(),train_classfi
+    train_classfi_number = []
+    for i in range(len(train_classfi)):
+		features = train_text[i]
+		if train_classfi[i]=="lumina" :
+			klass = 0
+			train_classfi_number.append(klass)
+		elif train_classfi[i]=="ERBB2" :
+			klass = 1
+			train_classfi_number.append(klass)
+		elif train_classfi[i]=="basal" :
+			klass = 2
+			train_classfi_number.append(klass)
+		elif train_classfi[i]=="normal" :
+			klass = 3
+			train_classfi_number.append(klass)
+		elif train_classfi[i]=="cell_lines" :
+			klass = 4
+			train_classfi_number.append(klass)
+    train_feature_name = []
+    for i in range(len(train_text)):
+    	train_feature_name.append(i)
+    return train_text.transpose(),train_classfi_number,train_classfi,train_feature_name
+
+
+
+	
+def AAC(listtest,listanswer):
+    labels = list(set(listtest))
+    total = 0
+    for i in range(len(labels)):
+        tp = 0
+        tn = 0
+        fp = 0
+        fn = 0
+        for j in range(len(listanswer)):
+            if(labels[i]==listanswer[j]):
+                if(listanswer[j]==listtest[j]):
+                    tp = tp + 1
+                else:
+                    fp = fp + 1
+            else:
+                if(labels[i]==listtest[j]):
+                    fn = tn + 1
+                else:
+                    tn = fn + 1
+        total = total + float(tp+tn)/(tp+tn+fp+fn)*100
+    return total/len(labels)
 
 
 # convert a supervised dataset to a classification dataset
@@ -71,11 +123,29 @@ def _convert_supervised_to_classification(supervised_dataset,classes):
 #             'minY': 0, 'maxY': 1, 'd': alldata}
 
 def generate_data():
-    INPUT_FEATURES = 9216 
+    INPUT_FEATURES = 100 
     CLASSES = 5
+    #train_text,train_classfi = getTargetData("Breast_train.data")
 
-    train_text,train_classfi = getTargetData("Breast_train.data")
-
+    #Load boston housing dataset as an example
+    train_text,train_classfi_number,train_classfi,train_feature_name = getTargetData("Breast_train.data")
+    X = train_text
+    Y = train_classfi_number
+    names = train_feature_name
+    rf = RandomForestRegressor()
+    rf.fit(X, Y)
+    temp=sorted(zip(map(lambda x: round(x, 4), rf.feature_importances_), names), 
+                 reverse=True)
+    ss = []
+    count = 0
+    df = pd.DataFrame(train_text)
+    for line in temp:
+        count == 0
+        count += 1
+        ss.append(df[line[1]].values)
+        if(count==100):
+            break
+    train_text = np.array(ss).transpose()
     alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
     for i in range(len(train_text)):
         features = train_text[i]
@@ -95,14 +165,26 @@ def generate_data():
             klass = 4
             alldata.addSample(features, klass)
     return {'minX': 0, 'maxX': 1,
-            'minY': 0, 'maxY': 1, 'd': alldata}
+            'minY': 0, 'maxY': 1, 'd': alldata,'index':temp}
 
-def generate_Testdata():
-    INPUT_FEATURES = 9216 
+def generate_Testdata(index):
+    INPUT_FEATURES = 100 
     CLASSES = 5
+    #train_text,train_classfi = getTargetData("Breast_train.data")
 
-    train_text,train_classfi = getTargetData("Breast_test.data")
-
+    #Load boston housing dataset as an example
+    train_text,train_classfi_number,train_classfi,train_feature_name = getTargetData("Breast_test.data")
+    temp=index
+    ss = []
+    count = 0
+    df = pd.DataFrame(train_text)
+    for line in temp:
+        count == 0
+        count += 1
+        ss.append(df[line[1]].values)
+        if(count==100):
+            break
+    train_text = np.array(ss).transpose()
     alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
     for i in range(len(train_text)):
         features = train_text[i]
@@ -122,11 +204,11 @@ def generate_Testdata():
             klass = 4
             alldata.addSample(features, klass)
     return {'minX': 0, 'maxX': 1,
-            'minY': 0, 'maxY': 1, 'd': alldata}
+            'minY': 0, 'maxY': 1, 'd': alldata,'index':temp}
 
 
 def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
-    INPUT_FEATURES = 9216
+    INPUT_FEATURES = 100
     CLASSES = 5
     HIDDEN_NEURONS = hidden_neurons
     WEIGHTDECAY = weightdecay
@@ -134,7 +216,7 @@ def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
     
     g = generate_data()
     alldata = g['d']
-    testdata = generate_Testdata()['d']
+    testdata = generate_Testdata(g['index'])['d']
     #tstdata, trndata = alldata.splitWithProportion(0.25)
     #print type(tstdata)
 
@@ -164,6 +246,8 @@ def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
         if tstdata['class'][i] != result[i]:
             error = error+1
     print (len(tstdata['class'])-error)*1.0/len(tstdata['class'])*100
+    print AAC(result,tstdata['class'])
+    NetworkWriter.writeToFile(fnn, 'breast.xml')
 if __name__ == '__main__':
     from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
@@ -171,10 +255,10 @@ if __name__ == '__main__':
 
     # Add more options if you like
     parser.add_argument("-H", metavar="H", type=int, dest="hidden_neurons",
-                        default=10,
+                        default=100,
                         help="number of neurons in the hidden layer")
     parser.add_argument("-d", metavar="W", type=float, dest="weightdecay",
-                        default=0.1,
+                        default=0.03,
                         help="weightdecay")
     parser.add_argument("-m", metavar="M", type=float, dest="momentum",
                         default=0.1,

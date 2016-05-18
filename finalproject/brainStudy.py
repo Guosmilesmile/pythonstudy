@@ -5,7 +5,7 @@ from pybrain.utilities import percentError
 from pybrain.tools.shortcuts import buildNetwork
 from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.structure.modules import SoftmaxLayer
-
+from pybrain.tools.customxml.networkwriter import NetworkWriter
 # Only needed for data generation and graphical output
 from pylab import ion, ioff, figure, draw, contourf, clf, show, plot
 from scipy import diag, arange, meshgrid, where
@@ -186,6 +186,7 @@ def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
             error = error+1
     print (len(tstdata['class'])-error)*1.0/len(tstdata['class'])*100
     print AAC(result,tstdata['class'])
+    
 if __name__ == '__main__':
     from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 

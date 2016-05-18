@@ -15,7 +15,7 @@ import pandas as pd
 import numpy as np
 
 def AAC(listtest,listanswer):
-    labels = list(set(listanswer))
+    labels = list(set(listtest))
     total = 0
     for i in range(len(labels)):
         tp = 0
@@ -122,7 +122,7 @@ def generate_data():
 
 def generate_Testdata():
     INPUT_FEATURES = 16063 
-    CLASSES = 5
+    CLASSES = 15
 
     train_text,train_classfi = getTargetData("GCM_test.data")
 
@@ -222,7 +222,7 @@ if __name__ == '__main__':
 
     # Add more options if you like
     parser.add_argument("-H", metavar="H", type=int, dest="hidden_neurons",
-                        default=100,
+                        default=40,
                         help="number of neurons in the hidden layer")
     parser.add_argument("-d", metavar="W", type=float, dest="weightdecay",
                         default=0.04,
