@@ -13,7 +13,12 @@ from numpy.random import multivariate_normal
 from random import normalvariate
 import pandas as pd
 import numpy as np
-
+def getIndexData(data,index):
+    df = pd.DataFrame(data)
+    result = []
+    for line in index:
+        result.append(df[line].values)
+    return np.array(result).transpose()
 def AAC(listtest,listanswer):
     labels = list(set(listtest))
     total = 0
