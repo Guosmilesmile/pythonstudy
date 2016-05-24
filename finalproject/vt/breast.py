@@ -12,44 +12,20 @@ from sklearn import cross_validation
 
 
 def getTargetData(fielname):
-    file_object  = open(fielname);
-    all_text_lines = file_object.readlines()
-    all_text = []
-    train_text = []
-    train_classfi = []
-    for line in all_text_lines:
-        all_text.append(line.strip().split(","))
-    train_classfi  = all_text[0]
-    for i in range(len(all_text)):
-        if(i!=0):
-            train_text.append(all_text[i])
-    train_text = np.array(train_text)
-    train_classfi = np.array(train_classfi)
-    for i in range(len(train_text)):
-        for j in range(len(train_text[0])):
-            train_text[i][j] = float(train_text[i][j])
-    train_classfi_number = []
-    for i in range(len(train_classfi)):
-        features = train_text[i]
-        if train_classfi[i]=="lumina" :
-            klass = 0
-            train_classfi_number.append(klass)
-        elif train_classfi[i]=="ERBB2" :
-            klass = 1
-            train_classfi_number.append(klass)
-        elif train_classfi[i]=="basal" :
-            klass = 2
-            train_classfi_number.append(klass)
-        elif train_classfi[i]=="normal" :
-            klass = 3
-            train_classfi_number.append(klass)
-        elif train_classfi[i]=="cell_lines" :
-            klass = 4
-            train_classfi_number.append(klass)
-    train_feature_name = []
-    for i in range(len(train_text)):
-        train_feature_name.append(i)
-    return train_text.transpose(),train_classfi_number,train_classfi,train_feature_name
+	file_object  = open("Breast_train.data");
+	all_text_lines = file_object.readlines()
+	all_text = []
+	train_text = []
+	train_classfi = []
+	for line in all_text_lines:
+		all_text.append(line.strip().split(","))
+	train_classfi  = all_text[0]
+	for i in range(len(all_text)):
+		if(i!=0):
+			train_text.append(all_text[i])
+	train_text = np.array(train_text)
+	train_classfi = np.array(train_classfi)
+	return train_text.transpose(),train_classfi
 
 train_text,train_classfi = getTargetData("Breast_train.data")
 test_text,test_classfi = getTargetData("Breast_test.data")
