@@ -109,7 +109,7 @@ def _convert_supervised_to_classification(supervised_dataset,classes):
 
 
 def generate_data():
-    INPUT_FEATURES = 300 
+    INPUT_FEATURES = 1000 
     CLASSES = 9
     #train_text,train_classfi = getTargetData("Breast_train.data")
 
@@ -129,7 +129,7 @@ def generate_data():
         count == 0
         count += 1
         ss.append(df[line[1]].values)
-        if(count==300):
+        if(count==1000):
             break
     train_text = np.array(ss).transpose()
     alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
@@ -166,7 +166,7 @@ def generate_data():
             'minY': 0, 'maxY': 1, 'd': alldata,'index':temp}
 
 def generate_Testdata(index):
-    INPUT_FEATURES = 300 
+    INPUT_FEATURES = 1000 
     CLASSES = 9
     #train_text,train_classfi = getTargetData("Breast_train.data")
 
@@ -180,7 +180,7 @@ def generate_Testdata(index):
         count == 0
         count += 1
         ss.append(df[line[1]].values)
-        if(count==300):
+        if(count==1000):
             break
     train_text = np.array(ss).transpose()
     alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
@@ -218,7 +218,7 @@ def generate_Testdata(index):
 
 
 def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
-    INPUT_FEATURES = 300
+    INPUT_FEATURES = 1000
     CLASSES = 9
     HIDDEN_NEURONS = hidden_neurons
     WEIGHTDECAY = weightdecay
