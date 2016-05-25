@@ -146,11 +146,11 @@ def _convert_supervised_to_classification(supervised_dataset,classes):
 def generate_data():
     index = [8673,1646,116,2191,4326,6718,7796,8531,8763,5646,3626,5451,2004,8079,4044,6471,675,3746,6338,3149,4880,4869,6213,5316,3544,1046,7739,8309,4147,5526,5555,1504,1625,2680,5814,1305,3998,794,4355,6788,3343,867,343,3706,6902,4250,9014,5478,788,5323,677,9215,9214,9213,9212,9211,9210,9209,9208,9207,9206,9205,9204,9203,9202,9201,9200,9199,9198,9197,9196,9195,9194,9193,9192,9191,9190,9189,9188,9187,9186,9185,9184,9183,9182,9181,9180,9179,9178,9177,9176,9175,9174,9173,9172,9171,9170,9169,9168,9167,9166,9165,9164,9163,9162,9161,9160,9159,9158,9157,9156,9155,9154,9153,9152,9151,9150,9149,9148,9147,9146,9145,9144,9143,9142,9141,9140,9139,9138,9137,9136,9135,9134,9133,9132,9131,9130,9129,9128,9127,9126,9125,9124,9123,9122,9121,9120,9119,9118,9117,9116,9115,9114,9113,9112,9111,9110,9109,9108,9107,9106,9105,9104,9103,9102,9101,9100,9099,9098,9097,9096,9095,9094,9093,9092,9091,9090,9089,9088,9087,9086,9085,9084,9083,9082,9081,9080,9079,9078,9077,9076,9075,9074,9073,9072,9071,9070,9069,9068,9067]
 
-    INPUT_FEATURES = 200 
+    INPUT_FEATURES = 9216 
     CLASSES = 5
     train_text,train_classfi_number,train_classfi,train_feature_name = getTargetData("Breast_train.data")
 
-    train_text = getIndexData(train_text,index)    
+    #train_text = getIndexData(train_text,index)    
 
     alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
     for i in range(len(train_text)):
@@ -174,11 +174,11 @@ def generate_data():
             'minY': 0, 'maxY': 1, 'd': alldata,'index':index}
 
 def generate_Testdata(index):
-    INPUT_FEATURES = 200 
+    INPUT_FEATURES = 9216 
     CLASSES = 5
     train_text,train_classfi_number,train_classfi,train_feature_name = getTargetData("Breast_test.data")
     
-    train_text = getIndexData(train_text,index)   
+    #train_text = getIndexData(train_text,index)   
 
     alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
     for i in range(len(train_text)):
@@ -203,7 +203,7 @@ def generate_Testdata(index):
 
 
 def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
-    INPUT_FEATURES = 200
+    INPUT_FEATURES = 9216
     CLASSES = 5
     HIDDEN_NEURONS = hidden_neurons
     WEIGHTDECAY = weightdecay
@@ -271,6 +271,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
  
-    perceptron(args.hidden_neurons, args.weightdecay, args.momentum)
+    #perceptron(args.hidden_neurons, args.weightdecay, args.momentum)
     # g = generate_data()
     # print g['d']
+
+    

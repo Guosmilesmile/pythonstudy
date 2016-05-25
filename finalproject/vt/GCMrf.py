@@ -182,14 +182,14 @@ def generate_data():
 
 
 
-    INPUT_FEATURES = 1000 
+    INPUT_FEATURES = 16063 
     CLASSES = 15
     #train_text,train_classfi = getTargetData("Breast_train.data")
 
     #Load boston housing dataset as an example
     train_text,train_classfi_number,train_classfi,train_feature_name = getTargetData("GCM_train.data")
     
-    train_text = getIndexData(train_text,index)
+    #train_text = getIndexData(train_text,index)
 
     alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
     for i in range(len(train_text)):
@@ -243,13 +243,13 @@ def generate_data():
             'minY': 0, 'maxY': 1, 'd': alldata,'index':index}
 
 def generate_Testdata(index):
-    INPUT_FEATURES = 1000 
+    INPUT_FEATURES = 16063 
     CLASSES = 15
     #train_text,train_classfi = getTargetData("Breast_train.data")
 
     #Load boston housing dataset as an example
     train_text,train_classfi_number,train_classfi,train_feature_name = getTargetData("GCM_test.data")
-    train_text = getIndexData(train_text,index)
+    #train_text = getIndexData(train_text,index)
     alldata = ClassificationDataSet(INPUT_FEATURES, 1, nb_classes=CLASSES)
     for i in range(len(train_text)):
         features = train_text[i]
@@ -303,7 +303,7 @@ def generate_Testdata(index):
 
 
 def perceptron(hidden_neurons=20, weightdecay=0.01, momentum=0.1):
-    INPUT_FEATURES = 1000
+    INPUT_FEATURES = 16063
     CLASSES = 15
     HIDDEN_NEURONS = hidden_neurons
     WEIGHTDECAY = weightdecay
